@@ -71,11 +71,20 @@ namespace CovertTweeter.Core
                 service.AuthenticateWith(_accessToken, _accessTokenSecret);
 
                 var options = new ListTweetsOnHomeTimelineOptions{
-                    Count = 20,
-                    SinceId  = sinceId,                    
+                    Count = 20,                    
+                    ExcludeReplies = false,
+                    IncludeEntities = true,
+                    TrimUser = false,
+                    ContributorDetails = true,
                 };
-                
-                var tweets = service.ListTweetsOnHomeTimeline(options);
+
+                if (sinceId != null && sinceId.Value > 0)
+                {
+                    options.SinceId = sinceId;
+                    options.MaxId = long.MaxValue;
+                }
+
+                var tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
                 return tweets.ToList();
             } catch (Exception ex) {
                 throw;
@@ -89,14 +98,33 @@ namespace CovertTweeter.Core
                 service.AuthenticateWith(_accessToken, _accessTokenSecret);
 
                 var options = new ListTweetsOnUserTimelineOptions{
-                    Count = 20,
-                    SinceId  = sinceId,             
+                    Count = 20,                    
                 };                
+
+                if (sinceId != null && sinceId.Value > 0)
+                {
+                    options.SinceId = sinceId;
+                    options.MaxId = long.MaxValue;
+                }
                 
 
                 var tweets = service.ListTweetsOnUserTimeline(options);
                 return tweets.ToList();
             } catch (Exception ex) {
+                throw;
+            }
+        }
+
+        public TwitterUser GetUser()
+        {
+            try
+            {
+                var service = new TwitterService(_apiKey, _apiKeySecret);
+                service.AuthenticateWith(_accessToken, _accessTokenSecret);
+                return service.GetUserProfile(new GetUserProfileOptions());
+            } 
+            catch (Exception ex)
+            {
                 throw;
             }
         }

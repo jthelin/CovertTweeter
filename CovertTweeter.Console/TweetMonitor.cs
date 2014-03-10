@@ -1,34 +1,31 @@
 using System;
+using System.Collections.Generic;
 using CovertTweeter.Core;
 using TweetSharp;
 
 namespace CovertTweeter
 {
     public class TweetMonitor
-    {                
+    {            
         public void Run()
         {
-            var lastUpdated = DateTime.Now;
             var repo = new TweetRepository();
 
-            // Get last 10 tweets/mentions/etc
+            long? lastHomeId = null;
+            long userId = repo.GetUser().Id;
 
             while (true)
-            {
-                long lastHomeId = 0;
-
-                foreach (var tweet in repo.GetTweetsFromHomeTimeline())
+            {                
+                foreach (var tweet in repo.GetTweetsFromHomeTimeline(lastHomeId))
                 {
                     ShowTweet(tweet);
-                    lastHomeId = Math.Max(lastHomeId,tweet.Id);
+                    lastHomeId = Math.Max(lastHomeId??0,tweet.Id);
                 }
-
-                // set lastupdated to latest received if any               
             }
         }
 
         private void ShowTweet(TwitterStatus tweet)
-        {
+        {            
             ColorConsole.Write(ConsoleColor.DarkYellow, tweet.Author.ScreenName);
             ColorConsole.WriteLine(ConsoleColor.DarkGray, ": {0}", tweet.Text);
         }

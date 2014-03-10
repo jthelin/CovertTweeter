@@ -50,6 +50,7 @@
     <Compile Include="ColorConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TweetMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CovertTweeter.Core\CovertTweeter.Core.csproj">
