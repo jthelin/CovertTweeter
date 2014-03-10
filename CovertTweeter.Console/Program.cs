@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using CovertTweeter.Core;
+using TweetSharp;
 
 namespace CovertTweeter
 {
@@ -36,21 +37,21 @@ namespace CovertTweeter
 
             while (true)
             {
-                var timeToCheck = lastUpdated;
+                long lastHomeId = 0;
 
-                // Get any new tweets since (timestamp)
-
-                // set lastupdated to latest received if any
-                
-                
-                // TEST
-                foreach (var tweet in repo.GetTweets())
+                foreach (var tweet in repo.GetTweetsFromHomeTimeline())
                 {
-                    Console.WriteLine("{0}: {1}\n",tweet.Author.ScreenName,tweet.Text);
+                    ShowTweet(tweet);
                 }
 
-                return;
+                // set lastupdated to latest received if any               
             }
+        }
+
+        private void ShowTweet(TwitterStatus tweet)
+        {
+
+            Console.WriteLine("{0}:{2} {1}\n",tweet.Author.ScreenName,tweet.Text, tweet.Id);throw new NotImplementedException();
         }
     }
 }

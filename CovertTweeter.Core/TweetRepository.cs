@@ -63,5 +63,42 @@ namespace CovertTweeter.Core
                 throw;
             }
         }
+
+        public List<TwitterStatus> GetTweetsFromHomeTimeline(long? sinceId = null)
+        {
+            try {
+                var service = new TwitterService(_apiKey, _apiKeySecret);
+                service.AuthenticateWith(_accessToken, _accessTokenSecret);
+
+                var options = new ListTweetsOnHomeTimelineOptions{
+                    Count = 20,
+                    SinceId  = sinceId,                    
+                };
+                
+                var tweets = service.ListTweetsOnHomeTimeline(options);
+                return tweets.ToList();
+            } catch (Exception ex) {
+                throw;
+            }
+        }
+
+        public List<TwitterStatus> GetTweetsFromUserTimeline(long? sinceId = null)
+        {
+            try {
+                var service = new TwitterService(_apiKey, _apiKeySecret);
+                service.AuthenticateWith(_accessToken, _accessTokenSecret);
+
+                var options = new ListTweetsOnUserTimelineOptions{
+                    Count = 20,
+                    SinceId  = sinceId,             
+                };                
+                
+
+                var tweets = service.ListTweetsOnUserTimeline(options);
+                return tweets.ToList();
+            } catch (Exception ex) {
+                throw;
+            }
+        }
     }
 }
