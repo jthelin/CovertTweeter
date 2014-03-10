@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Policy;
 using Microsoft.Win32;
 using TweetSharp;
 
@@ -15,6 +16,10 @@ namespace CovertTweeter.Core
         private readonly string _accessTokenSecret;
 
         private readonly string _regPath = @"HKEY_CURRENT_USER\SOFTWARE\NathanChere\CovertTweeter";
+        private readonly string KEY_API = @"ApiKey";
+        private readonly string KEY_APIPRIVATE = @"ApiSecret";
+        private readonly string KEY_TOKEN = @"AccessToken";
+        private readonly string KEY_TOKENPRIVATE = @"AccessTokenSecret";
 
         public TweetRepository(string apiKey, string apiKeySecret, string accessToken, string accessTokenSecret)
         {
@@ -22,29 +27,35 @@ namespace CovertTweeter.Core
             _apiKeySecret = apiKeySecret;
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+
+            throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
         }
 
         public TweetRepository()
         {
-            
-            (string)Registry.GetValue(_regPath, "Installed", null);    
-            _apiKey = apiKey;
-            _apiKeySecret = apiKeySecret;
-            _accessToken = accessToken;
-            _accessTokenSecret = accessTokenSecret;
+            // try from registry
+            _apiKey = (string)Registry.GetValue(_regPath, KEY_API, null);
+            _apiKeySecret = (string)Registry.GetValue(_regPath, KEY_APIPRIVATE, null);
+            _accessToken = (string)Registry.GetValue(_regPath, KEY_TOKEN, null);
+            _accessTokenSecret = (string)Registry.GetValue(_regPath, KEY_TOKENPRIVATE, null);
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+
+            // try from app.config
+            _apiKey = ConfigurationManager.AppSettings[KEY_API];
+            _apiKeySecret = (string)Registry.GetValue(_regPath, KEY_APIPRIVATE, null);
+            _accessToken = (string)Registry.GetValue(_regPath, KEY_TOKEN, null);
+            _accessTokenSecret = (string)Registry.GetValue(_regPath, KEY_TOKENPRIVATE, null);
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+
+            throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
         }
 
         public List<TwitterStatus> GetTweets()
         {
-            var ConsumerKey = ConfigurationManager.AppSettings["consumerKey"];
-                var ConsumerSecret = ConfigurationManager.AppSettings["consumerSecret"];
-                var AccessToken = ConfigurationManager.AppSettings["accessToken"];
-                var AccessTokenSecret = ConfigurationManager.AppSettings["accessTokenSecret"];
-
-            try
-            {
-                var service = new TwitterService(ConsumerKey, ConsumerSecret);
-                service.AuthenticateWith(AccessToken, AccessTokenSecret);
+            try {
+                var service = new TwitterService(_apiKey, _apiKeySecret);
+                service.AuthenticateWith(_accessToken, _accessTokenSecret);
 
                 var tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
                 return tweets.ToList();
