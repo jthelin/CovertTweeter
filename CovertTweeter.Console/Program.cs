@@ -17,11 +17,28 @@ namespace CovertTweeter
                                           exitEvent.Set();
                                       };
 
-            var server = new MyServer();     // example
-            server.Run();
+            (new TweetMonitor()).Run();
 
             exitEvent.WaitOne();
-            server.Stop();
+        }
+    }
+
+    public class TweetMonitor
+    {
+        private DateTime lastUpdated = DateTime.Now;
+
+        public void Run()
+        {
+            // Get last 10 tweets/mentions/etc
+
+            while (true)
+            {
+                var timeToCheck = lastUpdated;
+
+                // Get any new tweets since (timestamp)
+
+                // set lastupdated to latest received if any
+            }
         }
     }
 }
