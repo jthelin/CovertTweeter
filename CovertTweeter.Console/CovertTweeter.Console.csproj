@@ -7,7 +7,7 @@
     <ProjectGuid>{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CovertTweeter.Console</RootNamespace>
+    <RootNamespace>CovertTweeter</RootNamespace>
     <AssemblyName>CovertTweeter.Console</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

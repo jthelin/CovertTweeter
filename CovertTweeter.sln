@@ -10,11 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{945C72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertTweeter.Core", "CovertTweeter.Core\CovertTweeter.Core.csproj", "{D130B07E-B60A-4A7A-A678-6D8F2771936C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertTweeter.Console", "CovertTweeter.Console\CovertTweeter.Console.csproj", "{0A86C717-93EC-46B1-B46C-73F4FD327268}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{1B4E36B7-77CF-4C58-8A8D-45183A6E92EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{DAE3B103-200C-4B92-9E2D-DAB5CDEEDA3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertTweeter.Console", "CovertTweeter.Console\CovertTweeter.Console.csproj", "{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertTweeter.Desktop", "CovertTweeter.Desktop\CovertTweeter.Desktop.csproj", "{0A86C717-93EC-46B1-B46C-73F4FD327268}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{D130B07E-B60A-4A7A-A678-6D8F2771936C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D130B07E-B60A-4A7A-A678-6D8F2771936C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D130B07E-B60A-4A7A-A678-6D8F2771936C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A86C717-93EC-46B1-B46C-73F4FD327268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A86C717-93EC-46B1-B46C-73F4FD327268}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A86C717-93EC-46B1-B46C-73F4FD327268}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,6 +41,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{B0A1AE26-E72F-486B-9BCA-B1AA4B95D26F} = {1B4E36B7-77CF-4C58-8A8D-45183A6E92EC}
 		{0A86C717-93EC-46B1-B46C-73F4FD327268} = {1B4E36B7-77CF-4C58-8A8D-45183A6E92EC}
 		{D130B07E-B60A-4A7A-A678-6D8F2771936C} = {DAE3B103-200C-4B92-9E2D-DAB5CDEEDA3D}
 	EndGlobalSection
