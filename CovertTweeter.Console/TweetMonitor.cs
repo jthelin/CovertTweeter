@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using CovertTweeter.Core;
 using TweetSharp;
 
@@ -15,8 +17,12 @@ namespace CovertTweeter
             long userId = repo.GetUser().Id;
 
             while (true)
-            {                
-                foreach (var tweet in repo.GetTweetsFromHomeTimeline(lastHomeId))
+            {            
+                Thread.Sleep(1000);
+                var result = repo.GetTweetsFromHomeTimeline(lastHomeId);
+                if(result==null)
+                    ColorConsole.WriteLine(ConsoleColor.DarkRed,"Error updating");
+                else foreach (var tweet in result)
                 {
                     ShowTweet(tweet);
                     lastHomeId = Math.Max(lastHomeId??0,tweet.Id);

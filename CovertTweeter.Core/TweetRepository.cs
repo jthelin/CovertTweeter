@@ -87,7 +87,7 @@ namespace CovertTweeter.Core
                 var tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
                 return tweets.ToList();
             } catch (Exception ex) {
-                throw;
+                return null;
             }
         }
 
@@ -98,7 +98,7 @@ namespace CovertTweeter.Core
                 service.AuthenticateWith(_accessToken, _accessTokenSecret);
 
                 var options = new ListTweetsOnUserTimelineOptions{
-                    Count = 20,                    
+                    //Count = 20,                    
                 };                
 
                 if (sinceId != null && sinceId.Value > 0)
@@ -109,9 +109,9 @@ namespace CovertTweeter.Core
                 
 
                 var tweets = service.ListTweetsOnUserTimeline(options);
-                return tweets.ToList();
+                return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();
             } catch (Exception ex) {
-                throw;
+                return null;
             }
         }
 
@@ -125,7 +125,7 @@ namespace CovertTweeter.Core
             } 
             catch (Exception ex)
             {
-                throw;
+                return null;
             }
         }
     }
