@@ -20,6 +20,7 @@ namespace CovertTweeter
                 {
                     ShowTweet(tweet);
                     lastHomeId = Math.Max(lastHomeId??0,tweet.Id);
+                    if(lastHomeId==0)lastHomeId=null;
                 }
             }
         }
