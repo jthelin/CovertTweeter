@@ -17,8 +17,7 @@ namespace CovertTweeter
             long userId = repo.GetUser().Id;
 
             while (true)
-            {            
-                Thread.Sleep(1000);
+            {                            
                 var result = repo.GetTweetsFromHomeTimeline(lastHomeId);
                 if(result==null)
                     ColorConsole.WriteLine(ConsoleColor.DarkRed,"Error updating");
@@ -28,12 +27,15 @@ namespace CovertTweeter
                     lastHomeId = Math.Max(lastHomeId??0,tweet.Id);
                     if(lastHomeId==0)lastHomeId=null;
                 }
+                Thread.Sleep(2000);
             }
         }
 
         private void ShowTweet(TwitterStatus tweet)
         {            
-            ColorConsole.Write(ConsoleColor.DarkYellow, tweet.Author.ScreenName);
+            ColorConsole.Write(ConsoleColor.DarkYellow, "{0} [", tweet.Author.ScreenName);
+            ColorConsole.Write(ConsoleColor.Yellow, "{0} {1}", tweet.CreatedDate.ToShortDateString(), tweet.CreatedDate.ToShortTimeString());
+            ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");                        
             ColorConsole.WriteLine(ConsoleColor.DarkGray, ": {0}", tweet.Text);
         }
     }
