@@ -24,7 +24,7 @@ namespace CovertTweeter
             _repo.Start();
         }
 
-        private void ShowFollower(UserFollowedEventArgs e)
+        private void ShowFollower(object sender, UserFollowedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" ->",
                 e.User.ScreenName,
@@ -33,7 +33,7 @@ namespace CovertTweeter
             ColorConsole.WriteLine(ConsoleColor.Yellow, " now follows you!");
         }
 
-        private void ShowFavourite(TweetFavouritedEventArgs e)
+        private void ShowFavourite(object sender, TweetFavouritedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
                 e.FavouritingUser.ScreenName,
@@ -45,7 +45,7 @@ namespace CovertTweeter
             ColorConsole.WriteLine(ConsoleColor.DarkGray, ": {0}", e.Tweet.Text);
         }
 
-        private void ShowTweet(TweetReceivedEventArgs e)
+        private void ShowTweet(object sender, TweetReceivedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
                 e.Tweet.Creator.ScreenName,

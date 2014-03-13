@@ -11,7 +11,7 @@ using TweetinviCore.Interfaces.Streaminvi;
 
 namespace CovertTweeter.Core
 {
-    public class TweetRepository
+    public class TweetRepository : ITweetRepository
     {        
         const string REG_PATH = @"HKEY_CURRENT_USER\SOFTWARE\NathanChere\CovertTweeter";
 
@@ -48,36 +48,28 @@ namespace CovertTweeter.Core
         }
         #endregion
 
-        #region Events
-        public delegate void NewTweetEvent(TweetReceivedEventArgs e);
-        public delegate void NewMessageEvent(MessageEventArgs e);
-        public delegate void NewFollowerEvent(UserFollowedEventArgs e);
-        public delegate void NewFavouriteEvent(TweetFavouritedEventArgs e);
-        public delegate void HeartbeatEvent();
-       
-        public event NewTweetEvent NewTweet;
-        public event NewMessageEvent NewMessage;
-        public event NewFollowerEvent NewFollower;
-        public event NewFavouriteEvent NewFavourite;
-        public event HeartbeatEvent Heartbeat;
+        public event EventHandler<TweetReceivedEventArgs> NewTweet;
+        public event EventHandler<MessageEventArgs> NewMessage;
+        public event EventHandler<UserFollowedEventArgs> NewFollower;
+        public event EventHandler<TweetFavouritedEventArgs> NewFavourite;
+        public event EventHandler Heartbeat;
 
         private void CreateEventBindings()
         {            
-            _userStream.TweetCreatedByMe += (sender, args) => { if (NewTweet != null) NewTweet(args); };
-            _userStream.TweetCreatedByFriend += (sender, args) => { if (NewTweet != null) NewTweet(args); };
+            _userStream.TweetCreatedByMe += (sender, args) => { if (NewTweet != null) NewTweet(this,args); };
+            _userStream.TweetCreatedByFriend += (sender, args) => { if (NewTweet != null) NewTweet(this,args); };
 
-            _userStream.MessageReceived += (sender, args) => { if (NewMessage!= null) NewMessage(args); };
+            _userStream.MessageReceived += (sender, args) => { if (NewMessage!= null) NewMessage(this,args); };
 
-            _userStream.TweetFavouritedByAnyoneButMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(args); };
-            _userStream.TweetFavouritedByMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(args); };            
+            _userStream.TweetFavouritedByAnyoneButMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(this,args); };
+            _userStream.TweetFavouritedByMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(this,args); };
 
-            _userStream.FollowedByUser += (sender, args) => { if (NewFollower != null) NewFollower(args); };
+            _userStream.FollowedByUser += (sender, args) => { if (NewFollower != null) NewFollower(this,args); };
 
             _pulse = new Timer {Interval = 5000};
-            _pulse.Elapsed += (sender, args) => {if(Heartbeat!=null)Heartbeat();};
+            _pulse.Elapsed += (sender, args) => {if(Heartbeat!=null)Heartbeat(this,null);};
             _pulse.Start();
-        }
-        #endregion
+        }        
 
         public void Start()
         {            
