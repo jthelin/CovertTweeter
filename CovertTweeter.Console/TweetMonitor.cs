@@ -19,8 +19,18 @@ namespace CovertTweeter
         {
             _repo.NewTweet += ShowTweet;
             _repo.NewFavourite += ShowFavourite;
+            _repo.NewFollower += ShowFollower;
             //_repo.Heartbeat += () => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"echo...");
             _repo.Start();
+        }
+
+        private void ShowFollower(UserFollowedEventArgs e)
+        {
+            ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" ->",
+                e.User.ScreenName,
+                e.User.Name                
+                );                        
+            ColorConsole.WriteLine(ConsoleColor.Yellow, " now follows you!");
         }
 
         private void ShowFavourite(TweetFavouritedEventArgs e)
