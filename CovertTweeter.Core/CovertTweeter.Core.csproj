@@ -50,6 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Streaminvi">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\Streaminvi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -63,6 +66,30 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tweetinvi">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\Tweetinvi.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviControllers">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviControllers.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviCore">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviCore.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviCredentials">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviCredentials.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviFactories">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviFactories.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviLogic">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviLogic.dll</HintPath>
+    </Reference>
+    <Reference Include="TweetinviWebLogic">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\TweetinviWebLogic.dll</HintPath>
+    </Reference>
+    <Reference Include="UILibrary">
+      <HintPath>..\packages\TweetinviAPI.0.9.0.2\lib\UILibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TweetRepository.cs" />
