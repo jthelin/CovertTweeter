@@ -11,22 +11,23 @@ namespace CovertTweeter
 
         public TweetMonitor()
         {
-            _repo = new TweetRepository();            
+            _repo = new TweetRepository();
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
         }
 
         public void Run()
         {
             _repo.NewTweet += ShowTweet;
             _repo.NewFavourite += ShowFavourite;
-            _repo.Heartbeat += () => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"echo...");
+            //_repo.Heartbeat += () => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"echo...");
             _repo.Start();
         }
 
         private void ShowFavourite(TweetFavouritedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
-                e.FavouritingUser.Name,
-                e.FavouritingUser.ScreenName
+                e.FavouritingUser.ScreenName,
+                e.FavouritingUser.Name                
                 );            
             ColorConsole.Write(ConsoleColor.Yellow, "{0}", e.Tweet.CreatedAt.ToString());
             ColorConsole.Write(ConsoleColor.DarkYellow, "]");
@@ -37,8 +38,8 @@ namespace CovertTweeter
         private void ShowTweet(TweetReceivedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
-                e.Tweet.Creator.Name,
-                e.Tweet.Creator.ScreenName
+                e.Tweet.Creator.ScreenName,
+                e.Tweet.Creator.Name
                 );
             ColorConsole.Write(ConsoleColor.Yellow, "{0}", e.Tweet.CreatedAt.ToString());
             ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");
