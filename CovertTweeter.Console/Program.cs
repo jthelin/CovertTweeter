@@ -9,14 +9,14 @@ namespace CovertTweeter
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] foo)
         {
             var exitEvent = new ManualResetEvent(false);
 
-            Console.CancelKeyPress += (sender, eventArgs) => {
-                                          eventArgs.Cancel = true;
-                                          exitEvent.Set();
-                                      };
+            Console.CancelKeyPress += (sender, args) => {
+                args.Cancel = true;
+                exitEvent.Set();
+            };
 
             (new TweetMonitor()).Run();
 
