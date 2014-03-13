@@ -7,7 +7,7 @@ namespace CovertTweeter
 {
     public class TweetMonitor
     {
-        private TweetRepository _repo;
+        private ITweetRepository _repo;
 
         public TweetMonitor()
         {
@@ -20,8 +20,14 @@ namespace CovertTweeter
             _repo.NewTweet += ShowTweet;
             _repo.NewFavourite += ShowFavourite;
             _repo.NewFollower += ShowFollower;
+            _repo.NewMessage += ShowMessage;
             //_repo.Heartbeat += () => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"echo...");
             _repo.Start();
+        }
+
+        private void ShowMessage(object sender, MessageEventArgs e)
+        {
+            ShowUser(e.Message.Sender.ScreenName, e.Message.Sender.Name);
         }
 
         private void ShowFollower(object sender, UserFollowedEventArgs e)
@@ -29,7 +35,7 @@ namespace CovertTweeter
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" ->",
                 e.User.ScreenName,
                 e.User.Name                
-                );                        
+            );                        
             ColorConsole.WriteLine(ConsoleColor.Yellow, " now follows you!");
         }
 
@@ -37,8 +43,8 @@ namespace CovertTweeter
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
                 e.FavouritingUser.ScreenName,
-                e.FavouritingUser.Name                
-                );            
+                e.FavouritingUser.Name
+            );
             ColorConsole.Write(ConsoleColor.Yellow, "{0}", e.Tweet.CreatedAt.ToString());
             ColorConsole.Write(ConsoleColor.DarkYellow, "]");
             ColorConsole.WriteLine(ConsoleColor.Yellow, " -> FAV:");
@@ -50,10 +56,17 @@ namespace CovertTweeter
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
                 e.Tweet.Creator.ScreenName,
                 e.Tweet.Creator.Name
-                );
+            );
             ColorConsole.Write(ConsoleColor.Yellow, "{0}", e.Tweet.CreatedAt.ToString());
             ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");
             ColorConsole.WriteLine(ConsoleColor.DarkGray, ": {0}", e.Tweet.Text);
+        }
+
+        private void ShowUser(string userName, string displayName)
+        {
+            ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} ", userName);
+            if(!string.IsNullOrEmpty(displayName))
+            ColorConsole.Write(ConsoleColor.DarkYellow, "\"{0}\"", displayName);
         }
     }
 }
