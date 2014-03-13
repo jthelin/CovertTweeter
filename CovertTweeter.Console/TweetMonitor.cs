@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using TweetinviCore.Events.EventArguments;
 
 namespace CovertTweeter
@@ -10,7 +11,7 @@ namespace CovertTweeter
         public TweetMonitor()
         {
             _repo = new TweetRepository();
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.OutputEncoding = Encoding.Unicode;
         }
 
         public void Run()
