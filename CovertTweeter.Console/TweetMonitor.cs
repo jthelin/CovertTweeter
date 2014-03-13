@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using CovertTweeter.Core;
-using TweetSharp;
 
 namespace CovertTweeter
 {
@@ -14,7 +11,7 @@ namespace CovertTweeter
             var repo = new TweetRepository();
 
             long? lastHomeId = null;
-            long userId = repo.GetUser().Id;
+            //long userId = repo.GetUser().Id;
 
             while (true)
             {                            
@@ -31,7 +28,7 @@ namespace CovertTweeter
             }
         }
 
-        private void ShowTweet(TwitterStatus tweet)
+        private void ShowTweet(dynamic tweet)
         {            
             ColorConsole.Write(ConsoleColor.DarkYellow, "{0} [", tweet.Author.ScreenName);
             ColorConsole.Write(ConsoleColor.Yellow, "{0} {1}", tweet.CreatedDate.ToShortDateString(), tweet.CreatedDate.ToShortTimeString());

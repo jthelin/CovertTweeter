@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Policy;
 using Microsoft.Win32;
-using TweetSharp;
+using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
 
 namespace CovertTweeter.Core
 {
@@ -27,7 +32,8 @@ namespace CovertTweeter.Core
             _apiKeySecret = apiKeySecret;
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
+                return;
 
             throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
         }
@@ -39,94 +45,68 @@ namespace CovertTweeter.Core
             _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
             _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
             _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
+                return;
 
             // try from app.config
             _apiKey = ConfigurationManager.AppSettings[KEY_API];
             _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
             _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
             _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
+            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
+                return;
 
             throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
         }
 
-        public List<TwitterStatus> GetTweets()
-        {
-            try {
-                var service = new TwitterService(_apiKey, _apiKeySecret);
-                service.AuthenticateWith(_accessToken, _accessTokenSecret);
+        public dynamic GetTweetsFromHomeTimeline(long? sinceId = null)
+        {            
+            //https://api.twitter.com/1.1/statuses/home_timeline.json
+            //https://dev.twitter.com/docs/api/1.1/get/statuses/home_timeline
 
-                var tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
-                return tweets.ToList();
-            } catch (Exception ex) {
-                throw;
+            var client = new RestClient("https://api.twitter.com") {
+                Authenticator = OAuth1Authenticator.ForProtectedResource(
+                    KEY_API, KEY_APIPRIVATE,
+                    KEY_TOKEN, KEY_TOKENPRIVATE
+                ),
+            };
+
+            var request = new RestRequest(Method.GET) {
+                Resource = "1.1/statuses/home_timeline.json",
+            };
+
+            request.AddParameter("count", long.MaxValue);
+            if (sinceId.HasValue) {
+                request.AddParameter("max_id", long.MaxValue);
+                request.AddParameter("since_id", sinceId.Value);
             }
+
+            var response = client.Execute(request);
+
+            var result = JsonConvert.DeserializeObject<TwitterResponse>(response.Content);            
+            VerifyResponse(result);
+            return response;
+            //return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();            
         }
 
-        public List<TwitterStatus> GetTweetsFromHomeTimeline(long? sinceId = null)
-        {
-            try {
-                var service = new TwitterService(_apiKey, _apiKeySecret);
-                service.AuthenticateWith(_accessToken, _accessTokenSecret);
-
-                var options = new ListTweetsOnHomeTimelineOptions{
-                    Count = 20,                    
-                    ExcludeReplies = false,
-                    IncludeEntities = true,
-                    TrimUser = false,
-                    ContributorDetails = true,
-                };
-
-                if (sinceId != null && sinceId.Value > 0)
-                {
-                    options.SinceId = sinceId;
-                    options.MaxId = long.MaxValue;
-                }
-
-                var tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
-                return tweets.ToList();
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
-        public List<TwitterStatus> GetTweetsFromUserTimeline(long? sinceId = null)
-        {
-            try {
-                var service = new TwitterService(_apiKey, _apiKeySecret);
-                service.AuthenticateWith(_accessToken, _accessTokenSecret);
-
-                var options = new ListTweetsOnUserTimelineOptions{
-                    //Count = 20,                    
-                };                
-
-                if (sinceId != null && sinceId.Value > 0)
-                {
-                    options.SinceId = sinceId;
-                    options.MaxId = long.MaxValue;
-                }
-                
-
-                var tweets = service.ListTweetsOnUserTimeline(options);
-                return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
-        public TwitterUser GetUser()
-        {
-            try
+        private void VerifyResponse(TwitterResponse result)
+        {                                               
+            if (result.Errors != null && result.Errors.Any())
             {
-                var service = new TwitterService(_apiKey, _apiKeySecret);
-                service.AuthenticateWith(_accessToken, _accessTokenSecret);
-                return service.GetUserProfile(new GetUserProfileOptions());
-            } 
-            catch (Exception ex)
-            {
-                return null;
-            }
+                throw new Exception(string.Format("{0}: {1}", result.Errors[0].Code, result.Errors[0].Message));
+            }            
         }
+    }
+
+
+    public class TwitterResponse
+    {
+        public List<TwitterError> Errors { get; set; }
+    }
+
+    public class TwitterError
+    {
+        public string Message { get; set; }
+        public int Code { get; set; }
     }
 }
