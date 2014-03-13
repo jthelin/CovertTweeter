@@ -15,11 +15,11 @@ namespace CovertTweeter.Core
         private readonly string _accessToken;
         private readonly string _accessTokenSecret;
 
-        private readonly string _regPath = @"HKEY_CURRENT_USER\SOFTWARE\NathanChere\CovertTweeter";
-        private readonly string KEY_API = @"ApiKey";
-        private readonly string KEY_APIPRIVATE = @"ApiSecret";
-        private readonly string KEY_TOKEN = @"AccessToken";
-        private readonly string KEY_TOKENPRIVATE = @"AccessTokenSecret";
+        private const string REG_PATH = @"HKEY_CURRENT_USER\SOFTWARE\NathanChere\CovertTweeter";
+        private const string KEY_API = @"ApiKey";
+        private const string KEY_APIPRIVATE = @"ApiSecret";
+        private const string KEY_TOKEN = @"AccessToken";
+        private const string KEY_TOKENPRIVATE = @"AccessTokenSecret";
 
         public TweetRepository(string apiKey, string apiKeySecret, string accessToken, string accessTokenSecret)
         {
@@ -35,17 +35,17 @@ namespace CovertTweeter.Core
         public TweetRepository()
         {
             // try from registry
-            _apiKey = (string)Registry.GetValue(_regPath, KEY_API, null);
-            _apiKeySecret = (string)Registry.GetValue(_regPath, KEY_APIPRIVATE, null);
-            _accessToken = (string)Registry.GetValue(_regPath, KEY_TOKEN, null);
-            _accessTokenSecret = (string)Registry.GetValue(_regPath, KEY_TOKENPRIVATE, null);
+            _apiKey = (string)Registry.GetValue(REG_PATH, KEY_API, null);
+            _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
+            _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
+            _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
             if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
 
             // try from app.config
             _apiKey = ConfigurationManager.AppSettings[KEY_API];
-            _apiKeySecret = (string)Registry.GetValue(_regPath, KEY_APIPRIVATE, null);
-            _accessToken = (string)Registry.GetValue(_regPath, KEY_TOKEN, null);
-            _accessTokenSecret = (string)Registry.GetValue(_regPath, KEY_TOKENPRIVATE, null);
+            _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
+            _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
+            _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
             if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null) return;
 
             throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
