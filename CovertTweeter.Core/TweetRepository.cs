@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Timers;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 using Tweetinvi;
 using TweetinviCore.Events.EventArguments;
 using TweetinviCore.Interfaces.Streaminvi;
 
-namespace CovertTweeter.Core
+namespace CovertTweeter
 {
     public class TweetRepository : ITweetRepository
     {        

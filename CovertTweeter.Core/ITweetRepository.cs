@@ -1,7 +1,7 @@
 ﻿using System;
 using TweetinviCore.Events.EventArguments;
 
-namespace CovertTweeter.Core
+namespace CovertTweeter
 {
     public interface ITweetRepository
     {

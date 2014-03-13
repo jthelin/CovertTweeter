@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using CovertTweeter.Core;
 using TweetinviCore.Events.EventArguments;
 
 namespace CovertTweeter
