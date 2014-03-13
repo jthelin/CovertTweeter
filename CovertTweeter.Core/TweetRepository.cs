@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Dynamic;
 using System.IO;
@@ -66,8 +65,8 @@ namespace CovertTweeter.Core
 
             var client = new RestClient("https://api.twitter.com") {
                 Authenticator = OAuth1Authenticator.ForProtectedResource(
-                    KEY_API, KEY_APIPRIVATE,
-                    KEY_TOKEN, KEY_TOKENPRIVATE
+                    _apiKey, _apiKeySecret,
+                    _accessToken, _accessTokenSecret
                 ),
             };
 
@@ -82,9 +81,11 @@ namespace CovertTweeter.Core
             }
 
             var response = client.Execute(request);
-
-            var result = JsonConvert.DeserializeObject<TwitterResponse>(response.Content);            
+            var result = new TwitterResponse();
+            JsonConvert.PopulateObject(response.Content,result);
             VerifyResponse(result);
+            
+            result = JsonConvert.DeserializeObject<TwitterResponse>(response.Content);                        
             return response;
             //return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();            
         }
@@ -96,17 +97,5 @@ namespace CovertTweeter.Core
                 throw new Exception(string.Format("{0}: {1}", result.Errors[0].Code, result.Errors[0].Message));
             }            
         }
-    }
-
-
-    public class TwitterResponse
-    {
-        public List<TwitterError> Errors { get; set; }
-    }
-
-    public class TwitterError
-    {
-        public string Message { get; set; }
-        public int Code { get; set; }
     }
 }
