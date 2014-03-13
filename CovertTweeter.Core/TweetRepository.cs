@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Timers;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Tweetinvi;
@@ -15,6 +16,7 @@ namespace CovertTweeter.Core
         const string REG_PATH = @"HKEY_CURRENT_USER\SOFTWARE\NathanChere\CovertTweeter";
 
         private readonly IUserStream _userStream;
+        private Timer _pulse;
         
         #region .ctor                
         public TweetRepository() :this(null,null,null,null) { }
@@ -33,9 +35,9 @@ namespace CovertTweeter.Core
                 GetConfigValue(apiKeySecret, KEY_APIPRIVATE));
 
             _userStream = Stream.CreateUserStream();
+            CreateEventBindings();            
+        }
 
-            CreateEventBindings();
-        }        
         private string GetConfigValue(string defaultValue, string index)
         {
             var result = defaultValue 
@@ -50,10 +52,14 @@ namespace CovertTweeter.Core
         public delegate void NewTweetEvent(TweetReceivedEventArgs e);
         public delegate void NewMessageEvent(MessageEventArgs e);
         public delegate void NewFollowerEvent(UserFollowedEventArgs e);
-
+        public delegate void NewFavouriteEvent(TweetFavouritedEventArgs e);
+        public delegate void HeartbeatEvent();
+       
         public event NewTweetEvent NewTweet;
         public event NewMessageEvent NewMessage;
         public event NewFollowerEvent NewFollower;
+        public event NewFavouriteEvent NewFavourite;
+        public event HeartbeatEvent Heartbeat;
 
         private void CreateEventBindings()
         {            
@@ -62,7 +68,14 @@ namespace CovertTweeter.Core
 
             _userStream.MessageReceived += (sender, args) => { if (NewMessage!= null) NewMessage(args); };
 
+            _userStream.TweetFavouritedByAnyoneButMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(args); };
+            _userStream.TweetFavouritedByMe += (sender, args) =>  { if (NewFavourite!= null) NewFavourite(args); };            
+
             _userStream.FollowedByUser += (sender, args) => { if (NewFollower != null) NewFollower(args); };
+
+            _pulse = new Timer {Interval = 5000};
+            _pulse.Elapsed += (sender, args) => {if(Heartbeat!=null)Heartbeat();};
+            _pulse.Start();
         }
         #endregion
 
