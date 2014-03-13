@@ -5,7 +5,7 @@ using CovertTweeter.Core;
 namespace CovertTweeter
 {
     public class TweetMonitor
-    {            
+    {
         public void Run()
         {
             var repo = new TweetRepository();
@@ -14,25 +14,34 @@ namespace CovertTweeter
             //long userId = repo.GetUser().Id;
 
             while (true)
-            {                            
-                var result = repo.GetTweetsFromHomeTimeline(lastHomeId);
-                if(result==null)
-                    ColorConsole.WriteLine(ConsoleColor.DarkRed,"Error updating");
-                else foreach (var tweet in result)
+            {
+                try
                 {
-                    ShowTweet(tweet);
-                    lastHomeId = Math.Max(lastHomeId??0,tweet.Id);
-                    if(lastHomeId==0)lastHomeId=null;
+                    var result = repo.GetTweetsFromHomeTimeline(lastHomeId);
+                    foreach (var tweet in result)
+                    {
+                        ShowTweet(tweet);
+                        lastHomeId = Math.Max(lastHomeId ?? 0, tweet.Id);
+                        if (lastHomeId == 0)
+                            lastHomeId = null;
+                    }
                 }
-                Thread.Sleep(2000);
+                catch (Exception ex)
+                {
+                    ColorConsole.WriteLine(ConsoleColor.DarkRed, "Error: " + ex.Message);
+                }
+                finally
+                {
+                    Thread.Sleep(1000);
+                }                
             }
         }
 
-        private void ShowTweet(dynamic tweet)
-        {            
-            ColorConsole.Write(ConsoleColor.DarkYellow, "{0} [", tweet.Author.ScreenName);
-            ColorConsole.Write(ConsoleColor.Yellow, "{0} {1}", tweet.CreatedDate.ToShortDateString(), tweet.CreatedDate.ToShortTimeString());
-            ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");                        
+        private void ShowTweet(TwitterStatus tweet)
+        {
+            ColorConsole.Write(ConsoleColor.DarkYellow, "{0} [", tweet.User.Name);
+            ColorConsole.Write(ConsoleColor.Yellow, "{0} {1}", tweet.CreatedAt.ToString());
+            ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");
             ColorConsole.WriteLine(ConsoleColor.DarkGray, ": {0}", tweet.Text);
         }
     }

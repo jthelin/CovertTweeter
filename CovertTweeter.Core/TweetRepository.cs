@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Dynamic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Security.Authentication;
 using System.Security.Policy;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 
@@ -25,40 +27,38 @@ namespace CovertTweeter.Core
         private const string KEY_TOKEN = @"AccessToken";
         private const string KEY_TOKENPRIVATE = @"AccessTokenSecret";
 
+        #region ctor
+        public TweetRepository() :this(null,null,null,null) { }
+
         public TweetRepository(string apiKey, string apiKeySecret, string accessToken, string accessTokenSecret)
         {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings(){ContractResolver = new TwitterMappingResolver()};
+
             _apiKey = apiKey;
             _apiKeySecret = apiKeySecret;
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
-                return;
+            if (_apiKey != null && _apiKeySecret != null && _accessToken != null && _accessTokenSecret != null) return;
 
-            throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
-        }
-
-        public TweetRepository()
-        {
             // try from registry
             _apiKey = (string)Registry.GetValue(REG_PATH, KEY_API, null);
             _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
             _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
             _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
-                return;
+            if (_apiKey != null && _apiKeySecret != null && _accessToken != null && _accessTokenSecret != null) return;
 
             // try from app.config
             _apiKey = ConfigurationManager.AppSettings[KEY_API];
             _apiKeySecret = (string)Registry.GetValue(REG_PATH, KEY_APIPRIVATE, null);
             _accessToken = (string)Registry.GetValue(REG_PATH, KEY_TOKEN, null);
             _accessTokenSecret = (string)Registry.GetValue(REG_PATH, KEY_TOKENPRIVATE, null);
-            if (_apiKey != null || _apiKeySecret != null || _accessToken != null || _accessTokenSecret != null)
-                return;
+            if (_apiKey != null && _apiKeySecret != null && _accessToken != null && _accessTokenSecret != null) return;
 
             throw new ConfigurationErrorsException("API keys and access tokens not found in registry or app config");
         }
+        #endregion
 
-        public dynamic GetTweetsFromHomeTimeline(long? sinceId = null)
+        public List<TwitterStatus> GetTweetsFromHomeTimeline(long? sinceId = null)
         {            
             //https://api.twitter.com/1.1/statuses/home_timeline.json
             //https://dev.twitter.com/docs/api/1.1/get/statuses/home_timeline
@@ -80,18 +80,22 @@ namespace CovertTweeter.Core
                 request.AddParameter("since_id", sinceId.Value);
             }
 
-            var response = client.Execute(request);
-            var result = new TwitterResponse();
-            JsonConvert.PopulateObject(response.Content,result);
-            VerifyResponse(result);
-            
-            result = JsonConvert.DeserializeObject<TwitterResponse>(response.Content);                        
-            return response;
-            //return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();            
+            var response = client.Execute(request).Content;
+            VerifyResponse(response);
+
+            var tweets = JsonConvert.DeserializeObject<List<TwitterStatus>>(response);
+            return tweets.Where(t=>t.Id > (sinceId??0)).OrderBy(t=>t.Id).ToList();            
         }
 
-        private void VerifyResponse(TwitterResponse result)
-        {                                               
+        private void VerifyResponse(string json)
+        {
+            TwitterResponse result;
+            
+            try { // TODO: This is rubbish
+                result = JsonConvert.DeserializeObject<TwitterResponse>(json);
+            }
+            catch { return; }            
+                                
             if (result.Errors != null && result.Errors.Any())
             {
                 throw new Exception(string.Format("{0}: {1}", result.Errors[0].Code, result.Errors[0].Message));
