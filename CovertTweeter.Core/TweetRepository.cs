@@ -4,6 +4,7 @@ using System.Timers;
 using Microsoft.Win32;
 using Tweetinvi;
 using TweetinviCore.Events.EventArguments;
+using TweetinviCore.Interfaces.Credentials;
 using TweetinviCore.Interfaces.Streaminvi;
 
 namespace CovertTweeter
@@ -81,6 +82,11 @@ namespace CovertTweeter
         public void Stop()
         {            
             _userStream.StopStream();
+        }
+
+        public ILoggedUser GetCurrentUser()
+        {
+            return User.GetLoggedUser();
         }
 
         //var user = User.GetLoggedUser();

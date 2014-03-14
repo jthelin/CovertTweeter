@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using TweetinviCore.Events.EventArguments;
 
@@ -7,10 +8,13 @@ namespace CovertTweeter
     public class TweetMonitor
     {
         private ITweetRepository _repo;
+        private readonly string _currentUser;
 
         public TweetMonitor()
         {
             _repo = new TweetRepository();
+            _currentUser = _repo.GetCurrentUser().ScreenName;
+
             Console.OutputEncoding = Encoding.Unicode;
         }
 
@@ -57,6 +61,8 @@ namespace CovertTweeter
 
         private void PrintUser(string userName, string displayName)
         {
+            var color = ConsoleColor.DarkYellow;
+            if(userName == _currentUser) color = ConsoleColor.Yellow;
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} ", userName);
             if(!string.IsNullOrEmpty(displayName))
             ColorConsole.Write(ConsoleColor.DarkYellow, "\"{0}\"", displayName);
@@ -76,7 +82,7 @@ namespace CovertTweeter
 
                 if (body[i] == '#')
                 {
-                    color = ConsoleColor.DarkCyan;
+                    color = ConsoleColor.DarkMagenta;
                     do
                         { sb.Append(body[i++]); }
                     while
@@ -84,11 +90,14 @@ namespace CovertTweeter
                 }
                 else if (body[i] == '@')
                 {
-                    color = ConsoleColor.DarkMagenta;
+                    color = ConsoleColor.DarkCyan;
                     do
                         { sb.Append(body[i++]); }
                     while
                         (i < body.Length && !invalidChars.Contains(body[i].ToString()));
+
+                    if(sb.ToString().Skip(1).ToString() == _currentUser)
+                        color = ConsoleColor.Cyan;
                 }
                 else
                 {

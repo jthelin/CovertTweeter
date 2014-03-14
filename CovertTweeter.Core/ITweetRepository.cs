@@ -1,5 +1,6 @@
 ﻿using System;
 using TweetinviCore.Events.EventArguments;
+using TweetinviCore.Interfaces.Credentials;
 
 namespace CovertTweeter
 {
@@ -14,5 +15,6 @@ namespace CovertTweeter
         void Start();
         void Pause();
         void Stop();
+        ILoggedUser GetCurrentUser();
     }
 }
