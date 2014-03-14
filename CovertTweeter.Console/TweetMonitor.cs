@@ -37,10 +37,12 @@ namespace CovertTweeter
 
         private void ShowFavourite(object sender, TweetFavouritedEventArgs e)
         {
-            PrintUser(e.FavouritingUser.ScreenName, e.FavouritingUser.Name);            
-            ColorConsole.WriteLine(ConsoleColor.Yellow, " -> FAV:");
+            PrintUser(e.Tweet.Creator.ScreenName, e.Tweet.Creator.Name);
+            ColorConsole.Write(ConsoleColor.Yellow, " -> +fav by ");
+            PrintUser(e.FavouritingUser.ScreenName, e.FavouritingUser.Name);
+            CR();
             PrintTweet(e.Tweet.Text);
-        }
+        }        
 
         private void ShowTweet(object sender, TweetReceivedEventArgs e)
         {
@@ -63,26 +65,49 @@ namespace CovertTweeter
         private void PrintTweet(string body)
         {
             int i = 0;
-            ConsoleColor color;
-            var sb = new StringBuilder();
+            ConsoleColor color = ConsoleColor.Blue;
+            const string invalidChars = " '\";,.;'[]()+=-/\\!@#$%^&*|~`\n\t"; // TODO find out the official parsing strategy
+            
             while (i < body.Length)
             {                
+                var sb = new StringBuilder();
+
+                // TODO: bother detecting hyperlinks?
+
                 if (body[i] == '#')
                 {
                     color = ConsoleColor.DarkCyan;
+                    do
+                        { sb.Append(body[i++]); }
+                    while
+                        (i < body.Length && !invalidChars.Contains(body[i].ToString()));
                 }
                 else if (body[i] == '@')
                 {
                     color = ConsoleColor.DarkMagenta;
+                    do
+                        { sb.Append(body[i++]); }
+                    while
+                        (i < body.Length && !invalidChars.Contains(body[i].ToString()));
                 }
                 else
                 {
                     color = ConsoleColor.DarkGray;
-                }
-                sb.Append(body[i]);
-            }
+                    do
+                        { sb.Append(body[i++]); }
+                    while                        
+                        (i < body.Length && body[i]!=' ');                    
+                    if(i < body.Length) sb.Append(body[i++]);
+                }                
 
-            ColorConsole.WriteLine(ConsoleColor.DarkGray, "{0}", 
+                ColorConsole.Write(color,sb.ToString());                                
+            }
+            CR();
+        }
+
+        private void CR()
+        {
+            Console.WriteLine("");
         }
     }
 }
