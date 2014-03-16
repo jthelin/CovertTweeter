@@ -38,7 +38,7 @@ stable | [![Build status](https://ci-beta.appveyor.com/api/projects/status/rgra2
 *CI generously provided by [Appveyor](http://appveyor.com)
 
 Credits / thanks
-------
+----------------
 
 [TweetInvi](https://tweetinvi.codeplex.com) - without which this would probably end up being YAOSPIUAHATC (Yet Another Open Source Partially-Implemented Unoficially-Abandoned Half-Arsed Twitter Client).
 
