@@ -54,7 +54,7 @@ namespace CovertTweeter
         public event EventHandler StreamStopped;
         public event EventHandler StreamStarted;
         
-        public event EventHandler<string> Heartbeat;
+        public event EventHandler<PulseEventArgs> Heartbeat;
 
         private void CreateEventBindings()
         {            
@@ -70,20 +70,23 @@ namespace CovertTweeter
 
             _userStream.StreamStopped += OnStreamStopped;
             _userStream.StreamStarted += OnStreamStarted;
-                                    
-            _pulse.Elapsed += (sender, args) => { if (Heartbeat != null) Heartbeat(this, null); };
+         
+            _pulse = new Timer {Interval = 5000};               
+            _pulse.Elapsed += (sender, args) => { 
+                if (Heartbeat != null) Heartbeat(this, new PulseEventArgs("."));
+                _pulse.Start();
+            };
         }
 
         private void OnStreamStarted(object sender, EventArgs args)
         {
             if (StreamStarted != null) StreamStarted(this, args);
+            _pulse.Stop();
         }
 
         private void OnStreamStopped(object sender, StreamExceptionEventArgs args)
         {
             if (StreamStarted != null) StreamStopped(this, args);
-
-            _pulse = new Timer {Interval = 2};            
             _pulse.Start();
         }
 
