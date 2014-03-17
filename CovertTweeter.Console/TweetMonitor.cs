@@ -81,6 +81,8 @@ namespace CovertTweeter
                 var sb = new StringBuilder();
 
                 // TODO: bother detecting hyperlinks?
+                
+                while(i < body.Length && body[i]==' ') sb.Append(body[i++]);
 
                 if (body[i] == '#')
                 {
@@ -107,8 +109,7 @@ namespace CovertTweeter
                     do
                         { sb.Append(body[i++]); }
                     while                        
-                        (i < body.Length && body[i]!=' ');                    
-                    if(i < body.Length) sb.Append(body[i++]);
+                        (i < body.Length && body[i]!=' ');                                        
                 }                
 
                 ColorConsole.Write(color,sb.ToString());                                
