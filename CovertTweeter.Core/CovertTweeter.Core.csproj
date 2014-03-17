@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ITweetRepository.cs" />
+    <Compile Include="PulseEventArgs.cs" />
     <Compile Include="TweetRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

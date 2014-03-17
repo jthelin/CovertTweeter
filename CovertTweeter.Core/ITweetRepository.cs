@@ -10,7 +10,7 @@ namespace CovertTweeter
         event EventHandler<MessageEventArgs> NewMessage;
         event EventHandler<UserFollowedEventArgs> NewFollower;
         event EventHandler<TweetFavouritedEventArgs> NewFavourite;
-        event EventHandler Heartbeat;
+        event EventHandler<PulseEventArgs> Heartbeat;
 
         void Start();
         void Pause();

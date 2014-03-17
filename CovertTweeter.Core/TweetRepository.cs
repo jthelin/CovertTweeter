@@ -54,7 +54,7 @@ namespace CovertTweeter
         public event EventHandler StreamStopped;
         public event EventHandler StreamStarted;
         
-        public event EventHandler Heartbeat;
+        public event EventHandler<string> Heartbeat;
 
         private void CreateEventBindings()
         {            
