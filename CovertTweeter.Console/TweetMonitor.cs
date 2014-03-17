@@ -25,7 +25,8 @@ namespace CovertTweeter
             _repo.NewFollower += ShowFollower;
             _repo.NewMessage += ShowMessage;
             _repo.Heartbeat += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,e.Message);
-            _repo.Equals()+= (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,e.Message);
+            _repo.StreamStarted += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"Twitter feed GO!");
+            _repo.StreamStopped += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"Twitter feed halted:" + e.DisconnectMessage);
             _repo.Start();
         }
 
