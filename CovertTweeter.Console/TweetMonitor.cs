@@ -24,7 +24,8 @@ namespace CovertTweeter
             _repo.NewFavourite += ShowFavourite;
             _repo.NewFollower += ShowFollower;
             _repo.NewMessage += ShowMessage;
-            //_repo.Heartbeat += () => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"echo...");
+            _repo.Heartbeat += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,e.Message);
+            _repo.Equals()+= (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,e.Message);
             _repo.Start();
         }
 

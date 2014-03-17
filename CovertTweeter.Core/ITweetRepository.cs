@@ -11,10 +11,12 @@ namespace CovertTweeter
         event EventHandler<UserFollowedEventArgs> NewFollower;
         event EventHandler<TweetFavouritedEventArgs> NewFavourite;
         event EventHandler<PulseEventArgs> Heartbeat;
+        event EventHandler<StreamExceptionEventArgs> StreamStopped;
+        event EventHandler StreamStarted;
 
         void Start();
         void Pause();
         void Stop();
-        ILoggedUser GetCurrentUser();
+        ILoggedUser GetCurrentUser();        
     }
 }

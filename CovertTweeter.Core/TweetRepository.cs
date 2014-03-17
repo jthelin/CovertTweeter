@@ -51,7 +51,7 @@ namespace CovertTweeter
         public event EventHandler<UserFollowedEventArgs> NewFollower;
         public event EventHandler<TweetFavouritedEventArgs> NewFavourite;
         
-        public event EventHandler StreamStopped;
+        public event EventHandler<StreamExceptionEventArgs> StreamStopped;
         public event EventHandler StreamStarted;
         
         public event EventHandler<PulseEventArgs> Heartbeat;
