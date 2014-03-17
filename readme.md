@@ -35,10 +35,10 @@ Branch | Status | Download
 ------|-----|------
 master | [![Build status](https://ci-beta.appveyor.com/api/projects/status/rgra2l9lhf8281v6/branch/master)](https://ci-beta.appveyor.com/project/nathanchere/coverttweeter) | [.zip](https://github.com/nathanchere/CovertTweeter/archive/master.zip)
 stable | [![Build status](https://ci-beta.appveyor.com/api/projects/status/rgra2l9lhf8281v6/branch/stable)](https://ci-beta.appveyor.com/project/nathanchere/coverttweeter) | [.zip](https://github.com/nathanchere/CovertTweeter/archive/stable.zip)
-
+*CI generously provided by [Appveyor](http://appveyor.com)
 
 Credits / thanks
-------
+----------------
 
 [TweetInvi](https://tweetinvi.codeplex.com) - without which this would probably end up being YAOSPIUAHATC (Yet Another Open Source Partially-Implemented Unoficially-Abandoned Half-Arsed Twitter Client).
 
