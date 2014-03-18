@@ -105,7 +105,7 @@ namespace CovertTweeter
                 }
                 else
                 {
-                    color = ConsoleColor.DarkGray;
+                    color = ConsoleColor.Gray;
                     do
                         { sb.Append(body[i++]); }
                     while                        
