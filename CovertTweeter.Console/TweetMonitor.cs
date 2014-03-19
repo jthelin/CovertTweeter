@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using TweetinviCore.Events.EventArguments;
+using TweetinviCore.Interfaces.DTO;
 
 namespace CovertTweeter
 {
@@ -24,10 +25,16 @@ namespace CovertTweeter
             _repo.NewFavourite += ShowFavourite;
             _repo.NewFollower += ShowFollower;
             _repo.NewMessage += ShowMessage;
-            _repo.Heartbeat += (s,e) => ColorConsole.Write(ConsoleColor.DarkMagenta,e.Message);
+            _repo.Heartbeat += (s,e) => ColorConsole.Write(ConsoleColor.DarkMagenta,Clean(e.Message));
             _repo.StreamStarted += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"Twitter feed GO!");
-            _repo.StreamStopped += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"Twitter feed halted:" + e.DisconnectMessage);
+            _repo.StreamStopped += (s,e) => ColorConsole.WriteLine(ConsoleColor.DarkMagenta,"Twitter feed halted:" + Clean(e.DisconnectMessage.ToString()));
             _repo.Start();
+        }
+
+        // Prevent formatting bug
+        private string Clean(string message)
+        {
+            return message.Replace("{","{{").Replace("}","}}");
         }
 
         private void ShowMessage(object sender, MessageEventArgs e)
@@ -53,8 +60,8 @@ namespace CovertTweeter
         private void ShowTweet(object sender, TweetReceivedEventArgs e)
         {
             ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} \"{1}\" [",
-                e.Tweet.Creator.ScreenName,
-                e.Tweet.Creator.Name
+                Clean(e.Tweet.Creator.ScreenName),
+                Clean(e.Tweet.Creator.Name)
             );
             ColorConsole.Write(ConsoleColor.Yellow, "{0}", e.Tweet.CreatedAt.ToString());
             ColorConsole.WriteLine(ConsoleColor.DarkYellow, "]");
@@ -65,16 +72,16 @@ namespace CovertTweeter
         {
             var color = ConsoleColor.DarkYellow;
             if(userName == _currentUser) color = ConsoleColor.Yellow;
-            ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} ", userName);
+            ColorConsole.Write(ConsoleColor.DarkYellow, "@{0} ", Clean(userName));
             if(!string.IsNullOrEmpty(displayName))
-            ColorConsole.Write(ConsoleColor.DarkYellow, "\"{0}\"", displayName);
+            ColorConsole.Write(ConsoleColor.DarkYellow, "\"{0}\"", Clean(displayName));
         }
 
         private void PrintTweet(string body)
         {
             int i = 0;
             ConsoleColor color = ConsoleColor.Blue;
-            const string invalidChars = " '\";,.;'[]()+=-/\\!@#$%^&*|~`\n\t"; // TODO find out the official parsing strategy
+            const string invalidChars = " '\";,.;'[]()+=-/\\!@#$%^&*|~`\n\t{}"; // TODO find out the official parsing strategy
             
             while (i < body.Length)
             {                
@@ -112,7 +119,7 @@ namespace CovertTweeter
                         (i < body.Length && body[i]!=' ');                                        
                 }                
 
-                ColorConsole.Write(color,sb.ToString());                                
+                ColorConsole.Write(color,Clean(sb.ToString()));
             }
             CR();
         }
