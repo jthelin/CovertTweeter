@@ -80,17 +80,17 @@ namespace CovertTweeter
         private void PrintTweet(string body)
         {
             int i = 0;
-            ConsoleColor color = ConsoleColor.Blue;
             const string invalidChars = " '\";,.;'[]()+=-/\\!@#$%^&*|~`\n\t{}"; // TODO find out the official parsing strategy
             
             while (i < body.Length)
             {                
                 var sb = new StringBuilder();
+                ConsoleColor color;
 
                 // TODO: bother detecting hyperlinks?
                 
-                while(i < body.Length && body[i]==' ') sb.Append(body[i++]);
-
+                while(i < body.Length && body[i]==' ') Console.Write(body[i++]);
+                
                 if (body[i] == '#')
                 {
                     color = ConsoleColor.DarkMagenta;
@@ -107,8 +107,7 @@ namespace CovertTweeter
                     while
                         (i < body.Length && !invalidChars.Contains(body[i].ToString()));
 
-                    if(sb.ToString().Skip(1).ToString() == _currentUser)
-                        color = ConsoleColor.Cyan;
+                    if(sb.ToString() == _currentUser) color = ConsoleColor.Cyan;
                 }
                 else
                 {
