@@ -1,6 +1,6 @@
 ﻿using System;
-using TweetinviCore.Events.EventArguments;
-using TweetinviCore.Interfaces.Credentials;
+using Tweetinvi.Core.Events.EventArguments;
+using Tweetinvi.Core.Interfaces;
 
 namespace CovertTweeter
 {

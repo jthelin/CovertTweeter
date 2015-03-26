@@ -3,9 +3,9 @@ using System.Configuration;
 using System.Timers;
 using Microsoft.Win32;
 using Tweetinvi;
-using TweetinviCore.Events.EventArguments;
-using TweetinviCore.Interfaces.Credentials;
-using TweetinviCore.Interfaces.Streaminvi;
+using Tweetinvi.Core.Events.EventArguments;
+using Tweetinvi.Core.Interfaces;
+using Tweetinvi.Core.Interfaces.Streaminvi;
 
 namespace CovertTweeter
 {

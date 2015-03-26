@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
 using System.Text;
-using TweetinviCore.Events.EventArguments;
-using TweetinviCore.Interfaces.DTO;
+using Tweetinvi.Core.Events.EventArguments;
 
 namespace CovertTweeter
 {
     public class TweetMonitor
     {
-        private ITweetRepository _repo;
+        private readonly ITweetRepository _repo;
         private readonly string _currentUser;
 
         public TweetMonitor()
